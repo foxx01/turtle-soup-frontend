@@ -3,10 +3,10 @@
     <template #header>
       <div class="flex items-center justify-between gap-3">
         <div>
-          <div class="text-lg font-semibold text-slate-900">Chat</div>
-          <div class="text-sm text-slate-500">右栏只保留普通聊天流，正式提问从底部输入区进入。</div>
+          <div class="text-lg font-semibold text-slate-900">聊天区</div>
+          <div class="text-sm text-slate-500">右侧用于展示普通聊天消息，正式提问会进入中间区域。</div>
         </div>
-        <NTag size="small" type="info">{{ messages.length }} msgs</NTag>
+        <NTag size="small" type="info">{{ messages.length }} 条消息</NTag>
       </div>
     </template>
 
@@ -20,7 +20,7 @@
         <div class="flex items-center justify-between gap-3">
           <div class="flex items-center gap-2">
             <span class="font-semibold text-slate-900">{{ message.senderName }}</span>
-            <NTag v-if="message.kind === 'system'" size="tiny" type="warning">System</NTag>
+            <NTag v-if="message.kind === 'system'" size="tiny" type="warning">系统</NTag>
           </div>
           <span class="text-xs text-slate-400">{{ formatTime(message.createdAt) }}</span>
         </div>
@@ -29,7 +29,7 @@
 
       <NEmpty
         v-if="messages.length === 0"
-        description="No chat messages yet"
+        description="暂无聊天消息"
         class="rounded-2xl border border-dashed border-slate-200 py-10"
       />
     </div>

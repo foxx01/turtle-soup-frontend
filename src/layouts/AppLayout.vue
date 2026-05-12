@@ -16,7 +16,7 @@
                 </div>
                 <div>
                   <div class="text-lg font-semibold">{{ appStore.projectName }}</div>
-                  <div class="text-xs text-slate-500">Game Platform Frontend Skeleton</div>
+                  <div class="text-xs text-slate-500">多人海龟汤在线游玩前端</div>
                 </div>
               </div>
 
@@ -31,9 +31,9 @@
               </div>
 
               <div class="flex items-center gap-3">
-                <NButton quaternary @click="router.push('/login')">Login</NButton>
+                <NButton quaternary @click="router.push('/login')">登录</NButton>
                 <NButton type="primary" round @click="router.push('/register')">
-                  Register
+                  注册
                 </NButton>
               </div>
             </div>

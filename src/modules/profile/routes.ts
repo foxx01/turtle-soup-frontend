@@ -6,7 +6,7 @@ export const profileRoutes: RouteRecordRaw[] = [
     name: 'profile',
     component: () => import('./pages/ProfilePage.vue'),
     meta: {
-      title: 'Profile | Turtle Front',
+      title: '个人中心',
       activeMenu: '/profile'
     }
   }

@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 
+import { APP_TITLE } from '@/constants/labels'
 import { routes } from './routes'
 
 const router = createRouter({
@@ -11,7 +12,7 @@ const router = createRouter({
 })
 
 router.afterEach((to) => {
-  const title = typeof to.meta.title === 'string' ? to.meta.title : 'Turtle Front'
+  const title = typeof to.meta.title === 'string' ? to.meta.title : APP_TITLE
   document.title = title
 })
 

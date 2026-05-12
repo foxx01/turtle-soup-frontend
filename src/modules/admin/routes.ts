@@ -6,7 +6,7 @@ export const adminRoutes: RouteRecordRaw[] = [
     name: 'admin',
     component: () => import('./pages/AdminPage.vue'),
     meta: {
-      title: 'Admin | Turtle Front',
+      title: '管理后台',
       activeMenu: '/admin'
     }
   }

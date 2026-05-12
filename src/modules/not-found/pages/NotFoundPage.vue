@@ -4,14 +4,14 @@
       <div class="space-y-6">
         <NTag round type="warning">404</NTag>
         <div>
-          <h1 class="text-5xl font-semibold text-slate-900">Page Not Found</h1>
+          <h1 class="text-5xl font-semibold text-slate-900">页面不存在</h1>
           <NText depth="3" class="mt-3 block text-base">
-            当前页面不存在或路由未接入。可以先返回首页，或者回到大厅继续搭业务流。
+            当前页面不存在或路由尚未接入。你可以先返回首页，或者去房间大厅继续浏览。
           </NText>
         </div>
         <div class="flex flex-wrap justify-center gap-3">
-          <NButton type="primary" @click="router.push('/')">Go Home</NButton>
-          <NButton @click="router.push('/lobby')">Go Lobby</NButton>
+          <NButton type="primary" @click="router.push('/')">返回首页</NButton>
+          <NButton @click="router.push('/lobby')">前往大厅</NButton>
         </div>
       </div>
     </NCard>

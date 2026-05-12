@@ -1,17 +1,18 @@
 import { defineStore } from 'pinia'
 
+import { ROOM_STATUS_LABELS } from '@/constants/labels'
 import http from '@/services/http'
 import { getSocket } from '@/services/socket'
 import { useChatStore } from '@/stores/chat'
 import { useGameStore } from '@/stores/game'
 
-export type RoomStatus = 'waiting' | 'playing' | 'closed'
+export type RoomStatus = 'waiting' | 'playing' | 'revealed' | 'finished'
 export type RoomMode = 'casual' | 'ranked' | 'private'
 
 export interface RoomMember {
   id: string
   nickname: string
-  role: 'host' | 'player' | 'observer'
+  role: 'host' | 'moderator' | 'player' | 'observer'
   online: boolean
   ready: boolean
 }
@@ -51,33 +52,33 @@ function createMockRooms(): RoomSummary[] {
   return [
     {
       id: 'alpha',
-      name: 'Alpha Squad',
-      description: 'A casual room waiting for the next set of players.',
+      name: '午夜推理局',
+      description: '适合随时开局的休闲房间，人数少也可以先开始。',
       mode: 'casual',
       status: 'waiting',
       memberCount: 4,
       capacity: 8,
-      hostName: 'Kira'
+      hostName: '小七'
     },
     {
       id: 'bravo',
-      name: 'Bravo Table',
-      description: 'An active ranked room with a full team.',
+      name: '竞技排位房',
+      description: '正在进行中的多人对战房间。',
       mode: 'ranked',
       status: 'playing',
       memberCount: 6,
       capacity: 6,
-      hostName: 'Miki'
+      hostName: '米琪'
     },
     {
       id: 'charlie',
-      name: 'Charlie Night',
-      description: 'A private room prepared for invited players.',
+      name: '好友私密房',
+      description: '预留给受邀玩家加入的私密房间。',
       mode: 'private',
-      status: 'waiting',
+      status: 'finished',
       memberCount: 2,
       capacity: 5,
-      hostName: 'Allen'
+      hostName: '阿澜'
     }
   ]
 }
@@ -85,13 +86,13 @@ function createMockRooms(): RoomSummary[] {
 function createFallbackRoomSummary(roomId: string): RoomSummary {
   return {
     id: roomId,
-    name: `Room ${roomId.toUpperCase()}`,
-    description: 'A synchronized room shell waiting for backend room detail.',
+    name: `房间 ${roomId.toUpperCase()}`,
+    description: '这是一个等待后端房间详情同步的占位房间。',
     mode: 'casual',
     status: 'waiting',
-    memberCount: 4,
+    memberCount: 1,
     capacity: 8,
-    hostName: 'Kira'
+    hostName: '小七'
   }
 }
 
@@ -100,9 +101,9 @@ function createMockRoomDetail(summary: RoomSummary): RoomDetail {
     ...summary,
     members: [
       { id: 'user-001', nickname: summary.hostName, role: 'host', online: true, ready: true },
-      { id: 'user-002', nickname: 'Allen', role: 'player', online: true, ready: true },
-      { id: 'user-003', nickname: 'Miki', role: 'player', online: true, ready: false },
-      { id: 'user-004', nickname: 'Nora', role: 'observer', online: true, ready: false }
+      { id: 'user-002', nickname: '阿澜', role: 'moderator', online: true, ready: true },
+      { id: 'user-003', nickname: '米琪', role: 'player', online: true, ready: false },
+      { id: 'user-004', nickname: '诺拉', role: 'observer', online: true, ready: false }
     ]
   }
 }
@@ -142,18 +143,8 @@ export const useRoomStore = defineStore('room', {
     readyMemberCount: (state) =>
       state.currentRoom?.members.filter((member) => member.ready).length ?? 0,
     roomCode: (state) => state.currentRoom?.id.toUpperCase() ?? '--',
-    roomStatusLabel: (state) => {
-      switch (state.currentRoom?.status) {
-        case 'playing':
-          return 'Playing'
-        case 'closed':
-          return 'Closed'
-        case 'waiting':
-          return 'Waiting'
-        default:
-          return 'Unknown'
-      }
-    }
+    roomStatusLabel: (state) =>
+      state.currentRoom ? ROOM_STATUS_LABELS[state.currentRoom.status] : '未知状态'
   },
 
   actions: {
@@ -190,7 +181,7 @@ export const useRoomStore = defineStore('room', {
           status: 'waiting',
           memberCount: 1,
           capacity: payload.capacity,
-          hostName: 'You'
+          hostName: '你'
         }
 
         this.rooms = [newRoom, ...this.rooms]

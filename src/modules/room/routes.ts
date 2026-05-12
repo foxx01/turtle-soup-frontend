@@ -6,7 +6,7 @@ export const roomRoutes: RouteRecordRaw[] = [
     name: 'room',
     component: () => import('./pages/RoomPage.vue'),
     meta: {
-      title: 'Room | Turtle Front',
+      title: '房间',
       activeMenu: '/lobby'
     }
   }

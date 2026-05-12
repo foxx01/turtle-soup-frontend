@@ -39,7 +39,9 @@
         />
 
         <HostControlPanel
-          :is-host="isHost"
+          :can-manage-game="canManageGame"
+          :can-start-game="canStartGame"
+          :start-game-hint="startGameHint"
           :pending-questions="gameStore.pendingQuestions"
           :selected-question-id="selectedQuestionId"
           :selected-outcome="selectedOutcome"
@@ -104,9 +106,9 @@ const selectedOutcome = ref<AnswerRecord['outcome']>('yes')
 const answerDraft = ref('')
 
 const roomId = computed(() => String(route.params.roomId || 'alpha'))
-const roomTitle = computed(() => roomStore.currentRoom?.name ?? `Room ${roomId.value.toUpperCase()}`)
+const roomTitle = computed(() => roomStore.currentRoom?.name ?? `房间 ${roomId.value.toUpperCase()}`)
 const roomDescription = computed(
-  () => roomStore.currentRoom?.description ?? 'A synchronized multiplayer room for the current turtle soup round.'
+  () => roomStore.currentRoom?.description ?? '这是一个用于多人实时推理的海龟汤房间。'
 )
 const roomStatus = computed(() => roomStore.currentRoom?.status ?? 'waiting')
 const roomMode = computed(() => roomStore.currentRoom?.mode ?? 'casual')
@@ -114,10 +116,26 @@ const roomMembers = computed(() => roomStore.currentRoom?.members ?? [])
 const roomCode = computed(() => roomStore.roomCode)
 
 const currentUserId = computed(() => authStore.currentUserId ?? userStore.profile?.id ?? 'user-001')
-const currentUserName = computed(() => userStore.displayName || authStore.currentUserName || 'Turtle Player')
+const currentUserName = computed(() => userStore.displayName || authStore.currentUserName || '海龟玩家')
 
-const isHost = computed(() =>
-  roomMembers.value.some((member) => member.id === currentUserId.value && member.role === 'host')
+const canManageGame = computed(() =>
+  roomMembers.value.some(
+    (member) =>
+      member.id === currentUserId.value &&
+      (member.role === 'host' || member.role === 'moderator')
+  )
+)
+
+const canStartGame = computed(
+  () =>
+    canManageGame.value &&
+    roomStore.isInRoom &&
+    roomStatus.value === 'waiting' &&
+    (roomStore.connected || Boolean(roomStore.currentRoom))
+)
+
+const startGameHint = computed(() =>
+  canStartGame.value ? '当前人数较少，也可以先开始游戏。' : ''
 )
 
 const submitDisabled = computed(
@@ -145,13 +163,13 @@ watch(
 
 onMounted(async () => {
   if (!userStore.profile) {
-    userStore.hydrateCurrentUserMock('user-001', 'Kira')
+    userStore.hydrateCurrentUserMock('user-001', '小七')
   }
 
   if (!authStore.currentUserId) {
     authStore.applySession({
       userId: 'user-001',
-      username: 'Kira',
+      username: '小七',
       tokens: {
         accessToken: 'mock-room-access-token',
         refreshToken: 'mock-room-refresh-token'
@@ -207,16 +225,20 @@ async function handleSubmitAnswer() {
 
 function fillHostTemplate() {
   const templateMap: Record<AnswerRecord['outcome'], string> = {
-    yes: 'Yes. This line of reasoning is important. Keep digging in that direction.',
-    no: 'No. That assumption does not match the hidden story.',
-    irrelevant: 'Irrelevant. The clue is elsewhere.',
-    partial: 'Partially related. You found one useful edge but not the core trigger.'
+    yes: '是，这个方向很关键，可以继续往这里推理。',
+    no: '否，这个假设和真实故事并不一致。',
+    irrelevant: '无关，关键线索不在这里。',
+    partial: '部分相关，你碰到了一点边缘线索，但还没找到核心原因。'
   }
 
   answerDraft.value = templateMap[selectedOutcome.value]
 }
 
 function handleStartRound() {
+  if (!canStartGame.value) {
+    return
+  }
+
   gameStore.startRoundCountdown()
 }
 

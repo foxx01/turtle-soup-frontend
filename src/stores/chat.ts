@@ -29,8 +29,8 @@ function createMockMessages(roomId: string): ChatMessage[] {
       id: `${roomId}-msg-1`,
       roomId,
       senderId: 'system',
-      senderName: 'System',
-      content: 'Room channel initialized. Chat history is ready.',
+      senderName: '系统',
+      content: '房间频道已初始化，聊天记录已准备就绪。',
       kind: 'system',
       createdAt: new Date().toISOString()
     },
@@ -38,8 +38,8 @@ function createMockMessages(roomId: string): ChatMessage[] {
       id: `${roomId}-msg-2`,
       roomId,
       senderId: 'user-002',
-      senderName: 'Allen',
-      content: 'Waiting for the next round to start.',
+      senderName: '阿澜',
+      content: '等房主开始这一局。',
       kind: 'player',
       createdAt: new Date().toISOString()
     }

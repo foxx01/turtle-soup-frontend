@@ -6,7 +6,7 @@ export const authRoutes: RouteRecordRaw[] = [
     name: 'login',
     component: () => import('./pages/LoginPage.vue'),
     meta: {
-      title: 'Login | Turtle Front'
+      title: '登录'
     }
   },
   {
@@ -14,7 +14,7 @@ export const authRoutes: RouteRecordRaw[] = [
     name: 'register',
     component: () => import('./pages/RegisterPage.vue'),
     meta: {
-      title: 'Register | Turtle Front'
+      title: '注册'
     }
   }
 ]

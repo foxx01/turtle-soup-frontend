@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+import { ANSWER_TYPE_LABELS, GAME_PHASE_LABELS } from '@/constants/labels'
 import http from '@/services/http'
 import { getSocket } from '@/services/socket'
 
@@ -62,9 +63,9 @@ interface GameState {
 
 function createMockScoreboard(): GameScoreItem[] {
   return [
-    { userId: 'user-001', nickname: 'Kira', score: 120 },
-    { userId: 'user-002', nickname: 'Allen', score: 110 },
-    { userId: 'user-003', nickname: 'Miki', score: 95 }
+    { userId: 'user-001', nickname: '主持人小七', score: 120 },
+    { userId: 'user-002', nickname: '阿澜', score: 110 },
+    { userId: 'user-003', nickname: '米琪', score: 95 }
   ]
 }
 
@@ -74,8 +75,8 @@ function createMockQuestions(roomId: string): FormalQuestion[] {
       id: `${roomId}-question-1`,
       roomId,
       senderId: 'user-002',
-      senderName: 'Allen',
-      content: 'Was the victim already dead before the protagonist entered the scene?',
+      senderName: '阿澜',
+      content: '主角进入现场之前，关键事件是不是已经发生了？',
       status: 'answered',
       createdAt: new Date(Date.now() - 1000 * 60 * 7).toISOString(),
       answeredAt: new Date(Date.now() - 1000 * 60 * 6).toISOString()
@@ -84,8 +85,8 @@ function createMockQuestions(roomId: string): FormalQuestion[] {
       id: `${roomId}-question-2`,
       roomId,
       senderId: 'user-003',
-      senderName: 'Miki',
-      content: 'Is the key clue related to a misunderstanding rather than a crime?',
+      senderName: '米琪',
+      content: '关键线索是不是和误会有关，而不是犯罪行为本身？',
       status: 'pending',
       createdAt: new Date(Date.now() - 1000 * 60 * 2).toISOString(),
       answeredAt: null
@@ -99,9 +100,9 @@ function createMockAnswerRecords(roomId: string): AnswerRecord[] {
       id: `${roomId}-answer-1`,
       roomId,
       questionId: `${roomId}-question-1`,
-      responderName: 'Kira',
+      responderName: '主持人小七',
       outcome: 'yes',
-      content: 'Yes. The timeline begins after the key incident already happened.',
+      content: '是。真正关键的事情在主角注意到之前就已经发生了。',
       createdAt: new Date(Date.now() - 1000 * 60 * 6).toISOString()
     }
   ]
@@ -136,22 +137,7 @@ export const useGameStore = defineStore('game', {
       return `${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}`
     },
     leaderBoard: (state) => [...state.scoreboard].sort((a, b) => b.score - a.score),
-    phaseLabel: (state) => {
-      switch (state.phase) {
-        case 'waiting':
-          return 'Waiting'
-        case 'countdown':
-          return 'Countdown'
-        case 'playing':
-          return 'Playing'
-        case 'settlement':
-          return 'Settlement'
-        case 'finished':
-          return 'Finished'
-        default:
-          return 'Idle'
-      }
-    },
+    phaseLabel: (state) => GAME_PHASE_LABELS[state.phase],
     pendingQuestions: (state) => state.questionList.filter((item) => item.status === 'pending'),
     answeredQuestions: (state) => state.questionList.filter((item) => item.status === 'answered'),
     latestAnswerRecord: (state) => state.answerRecords.at(-1) ?? null
@@ -171,14 +157,14 @@ export const useGameStore = defineStore('game', {
         await Promise.resolve(http.defaults.baseURL)
 
         this.currentRoomId = roomId
-        this.phase = 'playing'
-        this.currentRound = 2
+        this.phase = 'waiting'
+        this.currentRound = 1
         this.totalRounds = 5
-        this.timerSeconds = 522
-        this.soupTitle = 'The Locked Lunchbox'
+        this.timerSeconds = 0
+        this.soupTitle = '被打开的便当盒'
         this.prompt =
-          'A person opens a lunchbox in the office pantry, says "it happened again", and immediately resigns. Why?'
-        this.hostHint = '主持人可只回答“是 / 否 / 无关 / 部分相关”，避免直接解释谜底。'
+          '一个人在公司茶水间打开便当盒，说了句“又来了”，随后立刻辞职。为什么？'
+        this.hostHint = '主持人只回答“是 / 否 / 无关 / 部分相关”，不要直接解释谜底。'
         this.scoreboard = createMockScoreboard()
         this.questionList = createMockQuestions(roomId)
         this.answerRecords = createMockAnswerRecords(roomId)
@@ -187,9 +173,9 @@ export const useGameStore = defineStore('game', {
             id: `${roomId}-action-1`,
             roomId,
             actorId: 'system',
-            actorName: 'System',
+            actorName: '系统',
             type: 'system',
-            content: 'Game snapshot initialized.',
+            content: '游戏快照已初始化。',
             createdAt: new Date().toISOString()
           }
         ]
@@ -306,7 +292,7 @@ export const useGameStore = defineStore('game', {
           actorId: 'host',
           actorName: payload.responderName,
           type: 'system',
-          content: `Answered question ${payload.questionId} with ${payload.outcome}.`,
+          content: `主持人已用“${ANSWER_TYPE_LABELS[payload.outcome]}”回答问题。`,
           createdAt: answeredAt
         })
       } finally {
@@ -363,7 +349,7 @@ export const useGameStore = defineStore('game', {
             id: question.questionId ?? `${roomId}-question-${Date.now()}`,
             roomId,
             senderId: 'remote-player',
-            senderName: 'Remote Player',
+            senderName: '其他玩家',
             content: question.content,
             status: 'pending',
             createdAt: question.createdAt,

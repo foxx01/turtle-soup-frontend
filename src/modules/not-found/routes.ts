@@ -6,7 +6,7 @@ export const notFoundRoutes: RouteRecordRaw[] = [
     name: 'not-found',
     component: () => import('./pages/NotFoundPage.vue'),
     meta: {
-      title: 'Not Found | Turtle Front'
+      title: '页面不存在'
     }
   }
 ]

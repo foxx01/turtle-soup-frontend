@@ -5,12 +5,12 @@ import request, {
 } from './request'
 
 export type RoomMode = 'casual' | 'ranked' | 'private'
-export type RoomStatus = 'waiting' | 'playing' | 'closed'
+export type RoomStatus = 'waiting' | 'playing' | 'revealed' | 'finished'
 
 export interface RoomMember {
   id: string
   nickname: string
-  role: 'host' | 'player' | 'observer'
+  role: 'host' | 'moderator' | 'player' | 'observer'
   online: boolean
   ready: boolean
 }

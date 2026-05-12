@@ -3,17 +3,17 @@
     <NCard class="rounded-3xl border-0 shadow-soft">
       <div class="flex flex-col gap-5 lg:flex-row lg:items-end lg:justify-between">
         <div class="space-y-3">
-          <NTag round type="error">Admin</NTag>
+          <NTag round type="error">管理后台</NTag>
           <div>
-            <h1 class="text-3xl font-semibold text-slate-900">Admin Console</h1>
+            <h1 class="text-3xl font-semibold text-slate-900">后台控制台</h1>
             <NText depth="3" class="mt-2 block">
-              管理后台预留系统概览、审核入口和内容治理区，当前只搭控制台骨架。
+              这里预留系统概览、审核入口和内容治理区域，当前先保留稳定的后台骨架。
             </NText>
           </div>
         </div>
         <div class="flex flex-wrap gap-3">
-          <NButton>Export Data</NButton>
-          <NButton type="primary">Create Notice</NButton>
+          <NButton>导出数据</NButton>
+          <NButton type="primary">发布公告</NButton>
         </div>
       </div>
     </NCard>
@@ -32,7 +32,7 @@
     <div class="grid gap-6 xl:grid-cols-[1.2fr_0.8fr]">
       <NCard class="rounded-3xl border-0 shadow-soft">
         <template #header>
-          <div class="text-lg font-semibold text-slate-900">Moderation Queue</div>
+          <div class="text-lg font-semibold text-slate-900">审核队列</div>
         </template>
 
         <div class="grid gap-4">
@@ -46,8 +46,8 @@
               <div class="mt-1 text-sm text-slate-500">{{ item.description }}</div>
             </div>
             <div class="flex gap-2">
-              <NButton size="small">Review</NButton>
-              <NButton size="small" type="primary">Resolve</NButton>
+              <NButton size="small">查看详情</NButton>
+              <NButton size="small" type="primary">处理完成</NButton>
             </div>
           </div>
         </div>
@@ -55,7 +55,7 @@
 
       <NCard class="rounded-3xl border-0 shadow-soft">
         <template #header>
-          <div class="text-lg font-semibold text-slate-900">System Widgets</div>
+          <div class="text-lg font-semibold text-slate-900">系统信息</div>
         </template>
 
         <NSpace vertical :size="16">
@@ -77,26 +77,26 @@
 import { NButton, NCard, NSpace, NTag, NText } from 'naive-ui'
 
 const metrics = [
-  { label: 'Online Users', value: '1,248' },
-  { label: 'Open Rooms', value: '86' },
-  { label: 'Pending Reports', value: '12' },
-  { label: 'Soup Entries', value: '314' }
+  { label: '在线用户', value: '1,248' },
+  { label: '开放房间', value: '86' },
+  { label: '待处理举报', value: '12' },
+  { label: '题库条目', value: '314' }
 ]
 
 const queue = [
   {
-    title: 'Reported chat message',
-    description: '预留举报审核记录行，用于接列表、过滤和审核动作。'
+    title: '聊天消息举报',
+    description: '预留举报审核入口，后续可以接入过滤、封禁和人工复核流程。'
   },
   {
-    title: 'Pending soup review',
-    description: '预留题库审核项，用于接入内容发布流程。'
+    title: '题目待审核',
+    description: '预留题库发布审核能力，方便后续接入内容上架流程。'
   }
 ]
 
 const widgets = [
-  { label: 'Server status', value: 'Healthy' },
-  { label: 'Realtime channel', value: 'Connected placeholder' },
-  { label: 'Audit mode', value: 'Manual review enabled' }
+  { label: '服务状态', value: '运行正常' },
+  { label: '实时通道', value: '已预留连接状态展示' },
+  { label: '审核模式', value: '当前为人工复核' }
 ]
 </script>

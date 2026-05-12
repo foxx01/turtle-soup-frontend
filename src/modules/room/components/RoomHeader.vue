@@ -3,9 +3,9 @@
     <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
       <div class="space-y-3">
         <div class="flex flex-wrap items-center gap-3">
-          <NTag round type="info">Room {{ roomCode }}</NTag>
+          <NTag round type="info">房间 {{ roomCode }}</NTag>
           <NTag :type="statusTagType" size="small">{{ statusLabel }}</NTag>
-          <NTag size="small" type="warning">Round {{ currentRound }}/{{ totalRounds }}</NTag>
+          <NTag size="small" type="warning">第 {{ currentRound }}/{{ totalRounds }} 回合</NTag>
         </div>
         <div>
           <h1 class="text-3xl font-semibold tracking-tight text-slate-900">{{ title }}</h1>
@@ -17,15 +17,15 @@
 
       <div class="grid gap-3 sm:grid-cols-3">
         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Mode</div>
+          <div class="text-xs uppercase tracking-[0.18em] text-slate-400">模式</div>
           <div class="mt-2 text-base font-semibold text-slate-900">{{ modeLabel }}</div>
         </div>
         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Timer</div>
+          <div class="text-xs uppercase tracking-[0.18em] text-slate-400">计时</div>
           <div class="mt-2 text-base font-semibold text-slate-900">{{ formattedTimer }}</div>
         </div>
         <div class="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3">
-          <div class="text-xs uppercase tracking-[0.18em] text-slate-400">Online</div>
+          <div class="text-xs uppercase tracking-[0.18em] text-slate-400">在线人数</div>
           <div class="mt-2 text-base font-semibold text-slate-900">{{ onlineMemberCount }}</div>
         </div>
       </div>
@@ -37,6 +37,7 @@
 import { computed } from 'vue'
 import { NCard, NTag, NText } from 'naive-ui'
 
+import { ROOM_MODE_LABELS, ROOM_STATUS_LABELS } from '@/constants/labels'
 import type { RoomMode, RoomStatus } from '@/stores/room'
 
 const props = defineProps<{
@@ -51,36 +52,19 @@ const props = defineProps<{
   onlineMemberCount: number
 }>()
 
-const statusLabel = computed(() => {
-  switch (props.status) {
-    case 'playing':
-      return 'Playing'
-    case 'closed':
-      return 'Closed'
-    default:
-      return 'Waiting'
-  }
-})
+const statusLabel = computed(() => ROOM_STATUS_LABELS[props.status])
+const modeLabel = computed(() => ROOM_MODE_LABELS[props.mode])
 
 const statusTagType = computed(() => {
   switch (props.status) {
     case 'playing':
       return 'success'
-    case 'closed':
+    case 'revealed':
+      return 'info'
+    case 'finished':
       return 'default'
     default:
       return 'warning'
-  }
-})
-
-const modeLabel = computed(() => {
-  switch (props.mode) {
-    case 'ranked':
-      return 'Ranked'
-    case 'private':
-      return 'Private'
-    default:
-      return 'Casual'
   }
 })
 </script>

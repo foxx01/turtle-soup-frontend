@@ -3,55 +3,59 @@
     <template #header>
       <div class="flex items-center justify-between gap-3">
         <div>
-          <div class="text-lg font-semibold text-slate-900">Host Control</div>
-          <div class="text-sm text-slate-500">主持人可以控制阶段、回答正式提问、推进回合。</div>
+          <div class="text-lg font-semibold text-slate-900">主持人操作区</div>
+          <div class="text-sm text-slate-500">房主或主持人可以在这里开始游戏、推进回合并回答正式提问。</div>
         </div>
-        <NTag :type="isHost ? 'error' : 'default'" size="small">
-          {{ isHost ? 'Host View' : 'Read Only' }}
+        <NTag :type="canManageGame ? 'error' : 'default'" size="small">
+          {{ canManageGame ? '可操作' : '只读模式' }}
         </NTag>
       </div>
     </template>
 
     <div class="grid gap-5">
+      <NAlert v-if="canManageGame && startGameHint" type="info" :show-icon="false">
+        {{ startGameHint }}
+      </NAlert>
+
       <div class="grid gap-4 md:grid-cols-3">
-        <NButton type="primary" :disabled="!isHost" @click="$emit('start-round')">
-          Start Round
+        <NButton type="primary" :disabled="!canStartGame" @click="$emit('start-round')">
+          开始游戏
         </NButton>
-        <NButton :disabled="!isHost" @click="$emit('advance-round')">Advance Round</NButton>
-        <NButton :disabled="!isHost" @click="$emit('settle-round')">Settle Round</NButton>
+        <NButton :disabled="!canManageGame" @click="$emit('advance-round')">下一回合</NButton>
+        <NButton :disabled="!canManageGame" @click="$emit('settle-round')">结束当前回合</NButton>
       </div>
 
       <div class="grid gap-5 lg:grid-cols-[1fr_220px]">
         <NSelect
           :value="selectedQuestionId"
-          :disabled="!isHost"
+          :disabled="!canManageGame"
           :options="questionOptions"
-          placeholder="Select a pending question"
+          placeholder="选择待回答的问题"
           @update:value="handleQuestionChange"
         />
         <NSelect
           :value="selectedOutcome"
-          :disabled="!isHost"
+          :disabled="!canManageGame"
           :options="outcomeOptions"
-          placeholder="Answer type"
+          placeholder="选择回答类型"
           @update:value="handleOutcomeChange"
         />
       </div>
 
       <NInput
         :value="answerDraft"
-        :disabled="!isHost"
+        :disabled="!canManageGame"
         type="textarea"
         :autosize="{ minRows: 3, maxRows: 5 }"
-        placeholder="Write the official host response"
+        placeholder="填写主持人的正式回答"
         @update:value="handleAnswerDraftChange"
       />
 
       <div class="flex flex-wrap gap-3">
         <NButton type="primary" :disabled="!canSubmit" @click="$emit('submit-answer')">
-          Submit Answer
+          提交回答
         </NButton>
-        <NButton :disabled="!isHost" @click="$emit('fill-template')">Use Template</NButton>
+        <NButton :disabled="!canManageGame" @click="$emit('fill-template')">填入模板</NButton>
       </div>
     </div>
   </NCard>
@@ -59,12 +63,15 @@
 
 <script setup lang="ts">
 import { computed } from 'vue'
-import { NButton, NCard, NInput, NSelect, NTag } from 'naive-ui'
+import { NAlert, NButton, NCard, NInput, NSelect, NTag } from 'naive-ui'
 
+import { ANSWER_TYPE_LABELS } from '@/constants/labels'
 import type { AnswerRecord, FormalQuestion } from '@/stores/game'
 
 const props = defineProps<{
-  isHost: boolean
+  canManageGame: boolean
+  canStartGame: boolean
+  startGameHint?: string
   pendingQuestions: FormalQuestion[]
   selectedQuestionId: string | null
   selectedOutcome: AnswerRecord['outcome']
@@ -84,21 +91,21 @@ const emit = defineEmits<{
 
 const questionOptions = computed(() =>
   props.pendingQuestions.map((question) => ({
-    label: `${question.senderName}: ${question.content}`,
+    label: `${question.senderName}：${question.content}`,
     value: question.id
   }))
 )
 
 const outcomeOptions = [
-  { label: 'Yes', value: 'yes' },
-  { label: 'No', value: 'no' },
-  { label: 'Irrelevant', value: 'irrelevant' },
-  { label: 'Partial', value: 'partial' }
+  { label: ANSWER_TYPE_LABELS.yes, value: 'yes' },
+  { label: ANSWER_TYPE_LABELS.no, value: 'no' },
+  { label: ANSWER_TYPE_LABELS.irrelevant, value: 'irrelevant' },
+  { label: ANSWER_TYPE_LABELS.partial, value: 'partial' }
 ]
 
 const canSubmit = computed(
   () =>
-    props.isHost &&
+    props.canManageGame &&
     Boolean(props.selectedQuestionId) &&
     props.answerDraft.trim().length > 0
 )

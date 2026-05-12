@@ -1,7 +1,7 @@
 import request, { type ApiResponse } from './request'
 
 export interface LoginParams {
-  account: string
+  username: string
   password: string
 }
 
@@ -14,16 +14,13 @@ export interface LoginResult {
 }
 
 export interface RegisterParams {
-  nickname: string
-  email: string
+  username: string
   password: string
-  invitationCode?: string
 }
 
 export interface RegisterResult {
   userId: string
-  nickname: string
-  email: string
+  username: string
 }
 
 export interface RefreshTokenParams {

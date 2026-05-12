@@ -3,15 +3,15 @@
     <template #header>
       <div class="flex items-center justify-between gap-3">
         <div>
-          <div class="text-lg font-semibold text-slate-900">Question Flow</div>
-          <div class="text-sm text-slate-500">正式提问和回答记录统一放在中栏，便于主持人判断节奏。</div>
+          <div class="text-lg font-semibold text-slate-900">提问与回答</div>
+          <div class="text-sm text-slate-500">中间区域集中展示正式提问和主持人的回答记录。</div>
         </div>
-        <NTag size="small" type="info">{{ pendingQuestions.length }} pending</NTag>
+        <NTag size="small" type="info">{{ pendingQuestions.length }} 条待回答</NTag>
       </div>
     </template>
 
     <NTabs type="line" animated>
-      <NTabPane name="questions" tab="Questions">
+      <NTabPane name="questions" tab="问题列表">
         <div class="grid gap-3">
           <div
             v-for="question in questions"
@@ -23,7 +23,7 @@
                 <div class="flex items-center gap-2">
                   <span class="font-semibold text-slate-900">{{ question.senderName }}</span>
                   <NTag size="tiny" :type="question.status === 'pending' ? 'warning' : 'success'">
-                    {{ question.status === 'pending' ? 'Pending' : 'Answered' }}
+                    {{ QUESTION_STATUS_LABELS[question.status] }}
                   </NTag>
                 </div>
                 <div class="mt-2 text-sm leading-7 text-slate-600">{{ question.content }}</div>
@@ -34,13 +34,13 @@
 
           <NEmpty
             v-if="questions.length === 0"
-            description="No formal questions yet"
+            description="暂时还没有正式提问"
             class="rounded-2xl border border-dashed border-slate-200 py-8"
           />
         </div>
       </NTabPane>
 
-      <NTabPane name="answers" tab="Answers">
+      <NTabPane name="answers" tab="回答记录">
         <div class="grid gap-3">
           <div
             v-for="answer in answers"
@@ -52,7 +52,7 @@
                 <div class="flex items-center gap-2">
                   <span class="font-semibold text-slate-900">{{ answer.responderName }}</span>
                   <NTag size="tiny" :type="answerTagType(answer.outcome)">
-                    {{ answer.outcome }}
+                    {{ ANSWER_TYPE_LABELS[answer.outcome] }}
                   </NTag>
                 </div>
                 <div class="mt-2 text-sm leading-7 text-slate-600">{{ answer.content }}</div>
@@ -63,7 +63,7 @@
 
           <NEmpty
             v-if="answers.length === 0"
-            description="No answer records yet"
+            description="暂时还没有回答记录"
             class="rounded-2xl border border-dashed border-slate-200 py-8"
           />
         </div>
@@ -76,6 +76,7 @@
 import { computed } from 'vue'
 import { NCard, NEmpty, NTabPane, NTabs, NTag } from 'naive-ui'
 
+import { ANSWER_TYPE_LABELS, QUESTION_STATUS_LABELS } from '@/constants/labels'
 import type { AnswerRecord, FormalQuestion } from '@/stores/game'
 
 const props = defineProps<{

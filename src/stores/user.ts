@@ -35,14 +35,14 @@ interface UserState {
   lastFetchedAt: string | null
 }
 
-function createMockProfile(userId = 'user-001', nickname = 'Turtle Player'): UserProfile {
+function createMockProfile(userId = 'user-001', nickname = '海龟玩家'): UserProfile {
   return {
     id: userId,
-    username: 'turtle.player',
+    username: 'turtle_player',
     nickname,
     email: 'player@example.com',
     avatar: '',
-    bio: 'Ready to join rooms, solve rounds and sync profile settings later.',
+    bio: '喜欢和朋友一起玩海龟汤，也喜欢安静地整理题库。',
     roles: ['player'],
     stats: {
       gamesPlayed: 128,
@@ -69,7 +69,7 @@ export const useUserStore = defineStore('user', {
 
   getters: {
     isProfileReady: (state) => Boolean(state.profile),
-    displayName: (state) => state.profile?.nickname || state.profile?.username || 'Guest',
+    displayName: (state) => state.profile?.nickname || state.profile?.username || '游客',
     userRoles: (state) => state.profile?.roles ?? [],
     preferredRoomCapacity: (state) => state.profile?.preferences.preferredRoomCapacity ?? 6
   },
@@ -81,7 +81,7 @@ export const useUserStore = defineStore('user', {
       this.lastFetchedAt = profile ? new Date().toISOString() : null
     },
 
-    hydrateCurrentUserMock(userId: string, nickname?: string) {
+    hydrateCurrentUserMock(userId: string, nickname = '海龟玩家') {
       this.setProfile(createMockProfile(userId, nickname))
     },
 

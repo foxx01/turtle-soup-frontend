@@ -6,7 +6,7 @@ export const lobbyRoutes: RouteRecordRaw[] = [
     name: 'lobby',
     component: () => import('./pages/LobbyPage.vue'),
     meta: {
-      title: 'Lobby | Turtle Front',
+      title: '房间大厅',
       activeMenu: '/lobby'
     }
   },
@@ -15,7 +15,7 @@ export const lobbyRoutes: RouteRecordRaw[] = [
     name: 'create-room',
     component: () => import('./pages/CreateRoomPage.vue'),
     meta: {
-      title: 'Create Room | Turtle Front',
+      title: '创建房间',
       activeMenu: '/lobby'
     }
   }

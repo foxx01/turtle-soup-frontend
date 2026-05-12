@@ -11,12 +11,12 @@
 
         <div class="relative z-10 grid w-full max-w-6xl gap-8 lg:grid-cols-[1fr_480px]">
           <section class="hidden rounded-[32px] border border-white/60 bg-white/60 p-10 shadow-soft backdrop-blur lg:block">
-            <NTag round type="info">Auth Portal</NTag>
+            <NTag round type="info">账号中心</NTag>
             <h1 class="mt-6 text-4xl font-semibold tracking-tight text-slate-900">
-              Welcome back to Turtle
+              欢迎来到海龟汤多人在线游玩
             </h1>
             <p class="mt-4 max-w-xl text-base leading-7 text-slate-600">
-              认证布局只负责承载登录和注册页面，方便后续独立接入表单校验、验证码和第三方登录。
+              这里承载登录与注册流程，后续可以继续接入短信验证码、第三方登录和更完整的账号安全能力。
             </p>
 
             <div class="mt-10 grid gap-4 sm:grid-cols-2">
@@ -50,9 +50,9 @@ import {
 import { RouterView } from 'vue-router'
 
 const highlights = [
-  { title: 'Auth Flow', value: 'Login / Register' },
-  { title: 'UI Style', value: 'Naive UI + Tailwind' },
-  { title: 'Extensible', value: 'Ready for forms and API' },
-  { title: 'Layout', value: 'Dedicated auth shell' }
+  { title: '账号流程', value: '登录 / 注册' },
+  { title: '界面方案', value: 'Naive UI + Tailwind CSS' },
+  { title: '扩展能力', value: '已预留表单与接口接入点' },
+  { title: '布局方式', value: '独立认证页布局' }
 ]
 </script>

@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia'
 
+import { APP_TITLE } from '@/constants/labels'
 import http from '@/services/http'
 import { getSocket } from '@/services/socket'
 import { useAppStore } from '@/stores/app'
@@ -93,18 +94,18 @@ export const useAuthStore = defineStore('auth', {
         const tokens = createMockTokens()
         this.applySession({
           userId: 'user-001',
-          username: 'Turtle Player',
+          username: '海龟玩家',
           tokens
         })
 
-        useUserStore().hydrateCurrentUserMock('user-001', 'Turtle Player')
+        useUserStore().hydrateCurrentUserMock('user-001', '海龟玩家')
       } finally {
         this.initialized = true
         this.authLoading = false
       }
     },
 
-    async login(payload: { account: string; password: string }) {
+    async login(payload: { username: string; password: string }) {
       this.authLoading = true
 
       try {
@@ -113,22 +114,22 @@ export const useAuthStore = defineStore('auth', {
         const tokens = createMockTokens()
         this.applySession({
           userId: 'user-001',
-          username: payload.account || 'Turtle Player',
+          username: payload.username || '海龟玩家',
           tokens
         })
 
-        useUserStore().hydrateCurrentUserMock('user-001', 'Turtle Player')
+        useUserStore().hydrateCurrentUserMock('user-001', payload.username || '海龟玩家')
         useAppStore().pushNotification({
           type: 'success',
-          title: 'Login Success',
-          description: 'Mock login finished. Replace this action with a real API call later.'
+          title: '登录成功',
+          description: `已进入 ${APP_TITLE}。当前仍是模拟登录流程，后续可替换为真实接口。`
         })
       } finally {
         this.authLoading = false
       }
     },
 
-    async register(payload: { nickname: string; email: string; password: string }) {
+    async register(payload: { username: string; password: string }) {
       this.authLoading = true
 
       try {
@@ -136,8 +137,8 @@ export const useAuthStore = defineStore('auth', {
 
         useAppStore().pushNotification({
           type: 'success',
-          title: 'Register Success',
-          description: `Mock account ${payload.nickname} is ready to continue with login flow.`
+          title: '注册成功',
+          description: `账号 ${payload.username} 已创建，现在可以继续登录。`
         })
       } finally {
         this.authLoading = false
@@ -198,8 +199,8 @@ export const useAuthStore = defineStore('auth', {
 
         useAppStore().pushNotification({
           type: 'info',
-          title: 'Logged Out',
-          description: 'Session state and room-related stores were reset.'
+          title: '已退出登录',
+          description: '会话状态和房间相关数据已重置。'
         })
       } finally {
         this.authLoading = false

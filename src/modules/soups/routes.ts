@@ -6,7 +6,7 @@ export const soupsRoutes: RouteRecordRaw[] = [
     name: 'soups',
     component: () => import('./pages/SoupsPage.vue'),
     meta: {
-      title: 'Soups | Turtle Front',
+      title: '题库',
       activeMenu: '/soups'
     }
   }

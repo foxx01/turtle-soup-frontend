@@ -1,5 +1,7 @@
 import { defineStore } from 'pinia'
 
+import { APP_TITLE, SOCKET_STATUS_LABELS } from '@/constants/labels'
+
 export type ThemeMode = 'light' | 'dark' | 'system'
 export type SocketStatus = 'idle' | 'connecting' | 'connected' | 'disconnected'
 
@@ -38,23 +40,23 @@ function createNotification(
 
 export const useAppStore = defineStore('app', {
   state: (): AppState => ({
-    projectName: 'Turtle Front',
+    projectName: APP_TITLE,
     themeMode: 'light',
     sidebarCollapsed: false,
     pageLoading: false,
     socketStatus: 'idle',
     navigation: [
-      { label: 'Home', key: '/' },
-      { label: 'Soups', key: '/soups' },
-      { label: 'Lobby', key: '/lobby' },
-      { label: 'Profile', key: '/profile' },
-      { label: 'Admin', key: '/admin' }
+      { label: '首页', key: '/' },
+      { label: '题库', key: '/soups' },
+      { label: '房间大厅', key: '/lobby' },
+      { label: '个人中心', key: '/profile' },
+      { label: '管理后台', key: '/admin' }
     ],
     notifications: [
       createNotification({
         type: 'info',
-        title: 'Scaffold Ready',
-        description: 'Base layouts, routes and stores are ready for feature work.'
+        title: '项目骨架已就绪',
+        description: '基础布局、路由和状态管理已经可用，可以继续接入业务功能。'
       })
     ]
   }),
@@ -62,7 +64,8 @@ export const useAppStore = defineStore('app', {
   getters: {
     navigationCount: (state) => state.navigation.length,
     latestNotification: (state) => state.notifications[0] ?? null,
-    isRealtimeConnected: (state) => state.socketStatus === 'connected'
+    isRealtimeConnected: (state) => state.socketStatus === 'connected',
+    socketStatusLabel: (state) => SOCKET_STATUS_LABELS[state.socketStatus]
   },
 
   actions: {

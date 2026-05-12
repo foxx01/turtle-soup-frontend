@@ -3,32 +3,32 @@
     <NCard class="rounded-3xl border-0 shadow-soft">
       <div class="flex flex-col gap-5 lg:flex-row lg:items-center lg:justify-between">
         <div class="space-y-3">
-          <NTag round type="info">Lobby</NTag>
+          <NTag round type="info">房间大厅</NTag>
           <div>
-            <h1 class="text-3xl font-semibold text-slate-900">Room Lobby</h1>
+            <h1 class="text-3xl font-semibold text-slate-900">多人房间列表</h1>
             <NText depth="3" class="mt-2 block">
-              大厅页保留筛选、房间列表和快捷创建入口，后续接实时房态和匹配能力。
+              在这里可以浏览房间、查看当前状态，并快速进入创建房间流程。
             </NText>
           </div>
         </div>
 
         <div class="flex flex-wrap gap-3">
           <NButton type="primary" round @click="router.push('/lobby/create')">
-            Create Room
+            创建房间
           </NButton>
-          <NButton round>Refresh</NButton>
+          <NButton round>刷新列表</NButton>
         </div>
       </div>
     </NCard>
 
     <div class="grid gap-6 lg:grid-cols-[280px_1fr]">
       <NCard class="rounded-3xl border-0 shadow-soft">
-        <template #header>Lobby Filters</template>
+        <template #header>筛选条件</template>
         <NSpace vertical :size="16">
-          <NInput placeholder="Search room name" />
-          <NSelect :options="modeOptions" placeholder="Mode" />
-          <NSelect :options="statusOptions" placeholder="Status" />
-          <NButton block>Apply Filters</NButton>
+          <NInput placeholder="搜索房间名称" />
+          <NSelect :options="modeOptions" placeholder="选择模式" />
+          <NSelect :options="statusOptions" placeholder="选择状态" />
+          <NButton block>应用筛选</NButton>
         </NSpace>
       </NCard>
 
@@ -49,13 +49,13 @@
                 {{ room.description }}
               </NText>
               <div class="flex flex-wrap gap-4 text-sm text-slate-500">
-                <span>{{ room.members }}/{{ room.capacity }} members</span>
+                <span>{{ room.members }}/{{ room.capacity }} 人</span>
                 <span>{{ room.mode }}</span>
                 <span>{{ room.owner }}</span>
               </div>
             </div>
 
-            <NButton type="primary" @click="router.push(`/room/${room.id}`)">Join Room</NButton>
+            <NButton type="primary" @click="router.push(`/room/${room.id}`)">进入房间</NButton>
           </div>
         </NCard>
       </div>
@@ -70,49 +70,50 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 
 const modeOptions = [
-  { label: 'Casual', value: 'casual' },
-  { label: 'Ranked', value: 'ranked' },
-  { label: 'Private', value: 'private' }
+  { label: '休闲', value: 'casual' },
+  { label: '竞技', value: 'ranked' },
+  { label: '私密', value: 'private' }
 ]
 
 const statusOptions = [
-  { label: 'Waiting', value: 'waiting' },
-  { label: 'Playing', value: 'playing' }
+  { label: '等待中', value: 'waiting' },
+  { label: '游戏中', value: 'playing' },
+  { label: '已结束', value: 'finished' }
 ]
 
 const rooms = [
   {
     id: 'alpha',
-    name: 'Alpha Squad',
-    status: 'Waiting',
+    name: '午夜推理局',
+    status: '等待中',
     tagType: 'success' as const,
-    description: '标准房间骨架，适合放置实时成员和游戏状态。',
-    members: 4,
+    description: '适合轻松开局的休闲房间，当前人数较少也可以直接开始游戏。',
+    members: 1,
     capacity: 8,
-    mode: 'Casual',
-    owner: 'Host: Kira'
+    mode: '休闲',
+    owner: '房主：小七'
   },
   {
     id: 'bravo',
-    name: 'Bravo Table',
-    status: 'Playing',
+    name: '竞技排位房',
+    status: '游戏中',
     tagType: 'warning' as const,
-    description: '正在游戏中的房间占位数据，后续可接观战和锁房逻辑。',
+    description: '当前正在进行推理对战，后续可以接入观战和锁房逻辑。',
     members: 6,
     capacity: 6,
-    mode: 'Ranked',
-    owner: 'Host: Miki'
+    mode: '竞技',
+    owner: '房主：米琪'
   },
   {
     id: 'charlie',
-    name: 'Charlie Night',
-    status: 'Waiting',
-    tagType: 'info' as const,
-    description: '带描述的房间卡片骨架，用于扩展密码房和标签筛选。',
+    name: '好友私密房',
+    status: '已结束',
+    tagType: 'default' as const,
+    description: '适合邀请好友一起玩的私密房间，后续可扩展密码与邀请链接。',
     members: 2,
     capacity: 5,
-    mode: 'Private',
-    owner: 'Host: Allen'
+    mode: '私密',
+    owner: '房主：阿澜'
   }
 ]
 </script>

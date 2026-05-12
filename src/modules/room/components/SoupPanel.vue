@@ -6,7 +6,7 @@
           <NTag round type="warning">{{ soupTitle }}</NTag>
           <NTag round type="success">{{ phaseLabel }}</NTag>
         </div>
-        <div class="mt-5 text-sm uppercase tracking-[0.22em] text-slate-300">Current Soup</div>
+        <div class="mt-5 text-sm uppercase tracking-[0.22em] text-slate-300">当前题面</div>
         <div class="mt-3 text-2xl font-semibold leading-tight">{{ prompt }}</div>
         <div class="mt-4 text-sm leading-7 text-slate-300">
           {{ hostHint }}
@@ -48,24 +48,24 @@ const props = defineProps<{
 
 const panels = computed(() => [
   {
-    label: 'Round',
+    label: '回合',
     value: `${props.currentRound}/${props.totalRounds}`,
-    caption: 'Current chapter'
+    caption: '当前进度'
   },
   {
-    label: 'Timer',
+    label: '计时',
     value: props.formattedTimer,
-    caption: 'Round countdown'
+    caption: '本回合时间'
   },
   {
-    label: 'Questions',
+    label: '问题数',
     value: String(props.questions.length),
-    caption: 'Formal submissions'
+    caption: '正式提问'
   },
   {
-    label: 'Answers',
+    label: '回答数',
     value: String(props.answers.length),
-    caption: 'Host responses'
+    caption: '主持人回应'
   }
 ])
 </script>

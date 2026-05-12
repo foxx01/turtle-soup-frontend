@@ -6,7 +6,7 @@ export const homeRoutes: RouteRecordRaw[] = [
     name: 'home',
     component: () => import('./pages/HomePage.vue'),
     meta: {
-      title: 'Home | Turtle Front',
+      title: '首页',
       activeMenu: '/'
     }
   }

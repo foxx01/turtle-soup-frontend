@@ -27,7 +27,7 @@ export interface RoomLeavePayload {
 export interface RoomMemberPayload {
   id: string
   nickname: string
-  role: 'host' | 'player' | 'observer'
+  role: 'host' | 'moderator' | 'player' | 'observer'
   online: boolean
   ready: boolean
 }
@@ -37,7 +37,7 @@ export interface RoomSnapshotPayload {
   name: string
   description: string
   mode: 'casual' | 'ranked' | 'private'
-  status: 'waiting' | 'playing' | 'closed'
+  status: 'waiting' | 'playing' | 'revealed' | 'finished'
   memberCount: number
   capacity: number
   hostName: string
